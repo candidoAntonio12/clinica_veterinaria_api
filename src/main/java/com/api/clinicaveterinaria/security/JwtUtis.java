@@ -31,7 +31,7 @@ public class JwtUtis {
       
         return ( jwthash );
     }
-    public static @Nullable String jwtIsvalid( String hash ) 
+    public static @Nullable String getSubject( String hash ) 
     {
     	try 
     	{ 

@@ -1,17 +1,15 @@
 package com.api.clinicaveterinaria.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.api.clinicaveterinaria.model.UserModel;
 import com.api.clinicaveterinaria.services.UserService;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.utils.exception.NullObjectException;
 
-@Component
+import jakarta.servlet.http.HttpServletRequest;
+
 public class JwtService {
 
-	@Autowired
 	private UserService service;
 	private String header;
 	private static final String PREFIX_TOKEN = "Bearer ";
@@ -22,12 +20,14 @@ public class JwtService {
 		this.service = service;
 		this.header = header;
 	}
-
-	public JwtService( String header ) 
+	
+	public JwtService( UserService service, HttpServletRequest request ) 
 	{
-		NullObjectException.isNullObject( header );
-		this.header = header;
+		NullObjectException.isNullObject( service, request );
+		this.service = service;
+		this.header = request.getHeader( "Authorization" );;
 	}
+	
 	private String  gethashToken() throws JWTDecodeException
 	{
 		String hash;
@@ -44,7 +44,7 @@ public class JwtService {
 		try 
 		{
 			String hash = gethashToken();
-			String username = JwtUtis.jwtIsvalid( hash );
+			String username = JwtUtis.getSubject( hash );
 			user = ( UserModel )service.loadUserByUsername( username );
 		}
 		catch( Exception e ) 
@@ -52,5 +52,10 @@ public class JwtService {
 			e.printStackTrace();
 		}
 		return ( user );
+	}
+	public void setHeader( String header ) 
+	{
+		NullObjectException.isNullObject( header );
+		this.header = header;
 	}
 }
