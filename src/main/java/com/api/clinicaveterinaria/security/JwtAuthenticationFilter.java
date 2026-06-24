@@ -34,6 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException 
 	{
 		
+		if ( request.getHeader("Authorization") == null ) {
+			filterChain.doFilter( request, response );
+			return ;
+		}
+		
 		JwtService service = new JwtService( userService , request );
     	var user = service.getUser();
     	if ( user == null ) 

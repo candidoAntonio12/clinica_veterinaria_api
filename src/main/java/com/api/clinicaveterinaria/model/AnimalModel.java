@@ -1,5 +1,6 @@
 package com.api.clinicaveterinaria.model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
@@ -12,9 +13,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class AnimalModel {
+public class AnimalModel implements Serializable{
 
-    @Id
+    private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue( strategy = GenerationType.UUID)
     private UUID id;
     @Column( nullable = false )

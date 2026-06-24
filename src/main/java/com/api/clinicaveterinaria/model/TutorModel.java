@@ -10,13 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class TutorModel {
+public class TutorModel implements Serializable{
 
-    @Id
+    private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue( strategy = GenerationType.UUID )
     private UUID id;
     @Column( nullable = false )

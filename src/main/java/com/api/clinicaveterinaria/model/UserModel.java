@@ -5,10 +5,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -21,7 +22,8 @@ import jakarta.persistence.Id;
 @Entity
 public class UserModel implements UserDetails {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue( strategy = GenerationType.UUID )
     private UUID id;
     @Column( nullable = false )
@@ -29,31 +31,37 @@ public class UserModel implements UserDetails {
     @Column( nullable =  false )
     private String email;
     @Column( nullable =  false )
+    @JsonIgnoreProperties
     private String password;
-    @ElementCollection( fetch = FetchType.LAZY )
+    @ElementCollection( fetch = FetchType.EAGER )
     private List<SimpleGrantedAuthority> grantedAuthoritys;
 
     public UserModel()
     {
         this.grantedAuthoritys = new ArrayList<>();
     }
-    @Override
+    @SuppressWarnings("null")
+	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         
         return ( grantedAuthoritys );
     }
     @Override
-    public @Nullable String getPassword() {
+    @SuppressWarnings("null")
+    public String getPassword() {
         return ( this.password );
     }
 
     @Override
-    public String getUsername() {
+    @SuppressWarnings("null")
+    public  String getUsername() {
         return ( this.email );
     }
-
+   
     public void addGrantedAuthority( String autority )
     {
+    	if (autority == null)
+    		return;
         var GrantedAutority = new SimpleGrantedAuthority( autority );
         this.grantedAuthoritys.add(GrantedAutority);
     }
